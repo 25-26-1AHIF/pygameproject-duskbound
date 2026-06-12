@@ -1,5 +1,7 @@
 import pygame
 
+# Gegner Klasse mit Position, Leben, Bewegung und Animation
+
 class Enemy:
     def __init__(self, enemy_id, x, y, left_limit, right_limit, sprites=None, hp=1, kind="mini"):
         self.id = enemy_id
@@ -25,6 +27,8 @@ class Enemy:
         self.attack_timer = 0
         self.attack_cooldown = 0
         self.attack_hit_done = False
+
+    # Gegner Hitbox für Angriff
 
     def attack_rect(self):
         if self.attack_timer <= 0:
@@ -77,6 +81,7 @@ class Enemy:
         self.anim_time += 0.04
     # KI-Ende
 
+    # Gegner bekommt schaden und stirbt bei 0 hp
     def take_hit(self, damage=1):
         if not self.alive:
             return False
@@ -85,6 +90,8 @@ class Enemy:
             self.alive = False
             return True
         return False
+
+    # Gegner zeichnen, Sprite anlegen und Lebensbalken anzeigen lassen
 
     def draw(self, surface, camera_x):
         if not self.alive:
