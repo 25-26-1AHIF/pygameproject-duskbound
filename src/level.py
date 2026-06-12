@@ -3,6 +3,8 @@ from pathlib import Path
 import pygame
 from src.enemy import Enemy
 
+# level dateien laden und spielobjekte initialisieren
+
 class Level:
     def __init__(self, index, data, collected_ids=None, killed_enemy_ids=None, mini_enemy_sprites=None, boss_enemy_sprites=None, background=None, heart_image=None, portal_image=None):
         self.index = index
@@ -36,6 +38,10 @@ class Level:
             if eid in killed_enemy_ids:
                 enemy.alive = False
             self.enemies.append(enemy)
+
+    # KI Anfang
+    # KI chatGPT
+    # prompt: Bitte erstelle Funktionen zum Verwalten von Sammelobjekten sowie zeichnen des Levels mit Plattformen, Stacheln, Herzen, Kristallen, gegnern und portal erstellen
 
     @property
     def collected_count(self):
@@ -99,6 +105,6 @@ class Level:
         else:
             pygame.draw.rect(surface, (55, 55, 75), p, border_radius=14)
             pygame.draw.rect(surface, (105, 95, 150), p, 4, border_radius=14)
-
+        # KI Ende
 def load_level_data(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
