@@ -1,5 +1,7 @@
 import pygame
 
+# Gegner Klasse mit Position, Leben, Bewegung und Animation
+
 class Enemy:
     def __init__(self, enemy_id, x, y, left_limit, right_limit, sprites=None, hp=1, kind="mini"):
         self.id = enemy_id
@@ -25,6 +27,8 @@ class Enemy:
         self.attack_timer = 0
         self.attack_cooldown = 0
         self.attack_hit_done = False
+
+    # Gegner-Hitbox für Angriff
 
     def attack_rect(self):
         if self.attack_timer <= 0:
@@ -77,6 +81,8 @@ class Enemy:
         self.anim_time += 0.04
     # KI-Ende
 
+    # Gegner bekommt Schaden und stirbt bei 0 HP
+
     def take_hit(self, damage=1):
         if not self.alive:
             return False
@@ -86,6 +92,8 @@ class Enemy:
             return True
         return False
 
+    # Gegner zeichnen, Sprite spiegeln und Lebensbalken anzeigen
+
     def draw(self, surface, camera_x):
         if not self.alive:
             return
@@ -94,7 +102,7 @@ class Enemy:
         if img:
             draw_img = pygame.transform.flip(img, True, False) if self.direction < 0 else img
 
-            # Optisch etwas tiefer zeichnen, weil das Sprite unten transparenten Rand hat.
+            # Optisch etwas tiefer zeichnen, weil das Sprite unten transparenten Rand hat
             draw_rect = draw_img.get_rect(midbottom=(self.rect.centerx - camera_x, 516))
             surface.blit(draw_img, draw_rect)
         else:
