@@ -1,13 +1,22 @@
 import pygame
 
+
 # Gegner Klasse mit Position, Leben, Bewegung und Animation
 
 class Enemy:
     def __init__(self, enemy_id, x, y, left_limit, right_limit, sprites=None, hp=1, kind="mini"):
         self.id = enemy_id
         self.kind = kind
-        self.width = 38 if kind == "mini" else 44
-        self.height = 52 if kind == "mini" else 60
+
+        if kind == "mini":
+            self.width = 38
+            self.height = 52
+            self.speed = 1.35
+        else:
+            self.width = 44
+            self.height = 60
+            self.speed = 1.05
+
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.pos = pygame.Vector2(float(x), float(y))
 
@@ -17,7 +26,6 @@ class Enemy:
 
         self.left_limit = left_limit
         self.right_limit = right_limit
-        self.speed = 1.35 if kind == "mini" else 1.05
         self.direction = -1
         self.alive = True
         self.hp = hp
@@ -33,10 +41,16 @@ class Enemy:
     def attack_rect(self):
         if self.attack_timer <= 0:
             return pygame.Rect(0, 0, 0, 0)
-        width = 46 if self.kind == "mini" else 58
+
+        if self.kind == "mini":
+            width = 46
+        else:
+            width = 58
+
         if self.direction >= 0:
             return pygame.Rect(self.rect.right - 2, self.rect.y + 10, width, 36)
-        return pygame.Rect(self.rect.left - width + 2, self.rect.y + 10, width, 36)
+        else:
+            return pygame.Rect(self.rect.left - width + 2, self.rect.y + 10, width, 36)
 
     # KI-Anfang
     # KI: ChatGPT
@@ -59,7 +73,11 @@ class Enemy:
         vertical_close = abs(player_rect.centery - self.rect.centery) < 42
 
         if abs(horizontal_distance) < 72 and vertical_close and self.attack_cooldown == 0:
-            self.direction = 1 if horizontal_distance >= 0 else -1
+            if horizontal_distance >= 0:
+                self.direction = 1
+            else:
+                self.direction = -1
+
             self.attack_timer = 20
             self.attack_cooldown = 48
             self.attack_hit_done = False
@@ -79,17 +97,20 @@ class Enemy:
             self.direction = -1
 
         self.anim_time += 0.04
+
     # KI-Ende
 
     # Gegner bekommt schaden und stirbt bei 0 hp
     def take_hit(self, damage=1):
         if not self.alive:
             return False
+
         self.hp -= damage
         if self.hp <= 0:
             self.alive = False
             return True
-        return False
+        else:
+            return False
 
     # Gegner zeichnen, Sprite anlegen und Lebensbalken anzeigen lassen
 
@@ -97,9 +118,16 @@ class Enemy:
         if not self.alive:
             return
 
-        img = self.sprites[int(self.anim_time) % len(self.sprites)] if self.sprites else None
+        if self.sprites:
+            img = self.sprites[int(self.anim_time) % len(self.sprites)]
+        else:
+            img = None
+
         if img:
-            draw_img = pygame.transform.flip(img, True, False) if self.direction < 0 else img
+            if self.direction < 0:
+                draw_img = pygame.transform.flip(img, True, False)
+            else:
+                draw_img = img
 
             # Optisch etwas tiefer zeichnen, weil das Sprite unten transparenten Rand hat.
             draw_rect = draw_img.get_rect(midbottom=(self.rect.centerx - camera_x, 516))
