@@ -30,7 +30,7 @@ class Player:
 
     def start_attack(self):
         if self.attack_timer <= 0:
-            self.attack_timer = 16
+            self.attack_timer = 23
             self.attack_hit_done = False
             self.anim_time = 0.0
 
