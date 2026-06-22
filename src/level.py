@@ -3,10 +3,12 @@ from pathlib import Path
 import pygame
 from src.enemy import Enemy
 
+
 # level dateien laden und spielobjekte initialisieren
 
 class Level:
-    def __init__(self, index, data, collected_ids=None, killed_enemy_ids=None, mini_enemy_sprites=None, boss_enemy_sprites=None, background=None, heart_image=None, portal_image=None):
+    def __init__(self, index, data, collected_ids=None, killed_enemy_ids=None, mini_enemy_sprites=None,
+                 boss_enemy_sprites=None, background=None, heart_image=None, portal_image=None):
         self.index = index
         self.name = data["name"]
         self.width = data["width"]
@@ -18,8 +20,16 @@ class Level:
         self.spikes = [pygame.Rect(*r) for r in data["spikes"]]
         self.portal = pygame.Rect(data["portal"][0], data["portal"][1], 76, 96)
 
-        collected_ids = collected_ids or []
-        killed_enemy_ids = killed_enemy_ids or []
+        if collected_ids is None:
+            collected_ids = []
+        else:
+            collected_ids = collected_ids
+
+        if killed_enemy_ids is None:
+            killed_enemy_ids = []
+        else:
+            killed_enemy_ids = killed_enemy_ids
+
         self.crystals = []
         for i, pos in enumerate(data["crystals"]):
             cid = f"level{index}_crystal{i}"
@@ -28,7 +38,13 @@ class Level:
         self.total_crystals = len(data["crystals"])
 
         self.hearts = []
-        for i, pos in enumerate(data.get("hearts", [])):
+
+        if "hearts" in data:
+            herzen_liste = data["hearts"]
+        else:
+            herzen_liste = []
+
+        for i, pos in enumerate(herzen_liste):
             self.hearts.append({"id": f"level{index}_heart{i}", "rect": pygame.Rect(pos[0], pos[1], 28, 28)})
 
         self.enemies = []
@@ -48,11 +64,23 @@ class Level:
         return self.total_crystals - len(self.crystals)
 
     def get_collected_ids(self):
-        existing = {c["id"] for c in self.crystals}
-        return [f"level{self.index}_crystal{i}" for i in range(self.total_crystals) if f"level{self.index}_crystal{i}" not in existing]
+        existing = set()
+        for c in self.crystals:
+            existing.add(c["id"])
+
+        gesammelte_liste = []
+        for i in range(self.total_crystals):
+            kristall_id = f"level{self.index}_crystal{i}"
+            if kristall_id not in existing:
+                gesammelte_liste.append(kristall_id)
+        return gesammelte_liste
 
     def get_killed_enemy_ids(self):
-        return [e.id for e in self.enemies if not e.alive]
+        toten_liste = []
+        for e in self.enemies:
+            if not e.alive:
+                toten_liste.append(e.id)
+        return toten_liste
 
     def draw(self, surface, camera_x):
         if self.background:
@@ -77,7 +105,7 @@ class Level:
         for s in self.spikes:
             x, y = s.x - camera_x, s.y
             for i in range(0, s.width, 16):
-                pts = [(x+i, y+32), (x+i+8, y+6), (x+i+16, y+32)]
+                pts = [(x + i, y + 32), (x + i + 8, y + 6), (x + i + 16, y + 32)]
                 pygame.draw.polygon(surface, (160, 165, 180), pts)
                 pygame.draw.polygon(surface, (45, 45, 60), pts, 2)
 
@@ -106,5 +134,7 @@ class Level:
             pygame.draw.rect(surface, (55, 55, 75), p, border_radius=14)
             pygame.draw.rect(surface, (105, 95, 150), p, 4, border_radius=14)
         # KI Ende
+
+
 def load_level_data(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
