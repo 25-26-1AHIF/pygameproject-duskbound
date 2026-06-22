@@ -384,7 +384,7 @@ class Game:
         self.draw_menu_bg()
         pos = self.get_mouse_pos()
         draw_center_text(self.screen, "DUSKBOUND", self.big_font, 55)
-        draw_center_text(self.screen, "Demoversion", self.medium_font, 135, (225,210,255))
+        draw_center_text(self.screen, "", self.medium_font, 135, (225,210,255))
         draw_button(self.screen, self.menu_buttons["start"], "Neues Spiel", self.medium_font, pos)
         draw_button(self.screen, self.menu_buttons["load"], "Spiel laden", self.medium_font, pos)
         draw_button(self.screen, self.menu_buttons["rankings"], "Highscores", self.medium_font, pos)
