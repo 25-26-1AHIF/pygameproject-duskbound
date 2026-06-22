@@ -1,0 +1,9 @@
+Die Präsentation sowie das Enddokument wurden mittels Claude KI erstellt. Folgende Prompts wurden verwendet:
+
+Prompt für die Präsentation:
+
+Erstelle eine moderne PowerPoint-Präsentation für unser Schulprojekt „Duskbound" (2D Jump-and-Run in Python/Pygame) basierend auf der beigefügten Dokumentation. Dunkles Game-Design, wenig Text, Stichworte, investor-style. 11 Slides: Titel, Team, Story, Spielelemente, Steuerung, Must-Have, Nice-to-Have, Entwicklungsprozess, Highlights, Live Demo, Danke.
+
+Prompt für die Enddokumentation:
+
+Erstelle eine professionelle Enddokumentation als Word-Dokument für unser Spiel „Duskbound" basierend auf dem beigefügten Planungsdokument. Mit Deckblatt, Kopf-/Fußzeile, Seitennummern und allen Kapiteln: Team, Projektidee, Spielelemente, Steuerung, Must-Have, Nice-to-Have, Entwicklungsprozess, Technologien und Projektziel.
